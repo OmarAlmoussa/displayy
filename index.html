@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOON BARBERSHOP</title>
+    <meta http-equiv="refresh" content="21">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            overflow: hidden;
+            background: #000;
+            height: 100vh;
+            width: 100vw;
+            cursor: none;
+        }
+
+        .display-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            background: linear-gradient(45deg, #1a1a2e, #16213e, #0f3460, #5a9f9f, #4dd0e1);
+            background-size: 500% 500%;
+            animation: gradientShift 20s ease infinite;
+        }
+
+        .screen {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            animation: screenCycle 20s infinite;
+            padding: 40px;
+        }
+
+        .screen:nth-child(1) { animation-delay: 0s; }
+        .screen:nth-child(2) { animation-delay: 5s; }
+        .screen:nth-child(3) { animation-delay: 10s; }
+        .screen:nth-child(4) { animation-delay: 15s; }
+
+        /* Welcome Screen */
+        .welcome-screen {
+            text-align: center;
+            color: white;
+        }
+
+        .logo-container {
+            margin-bottom: 60px;
+            animation: logoFloat 6s ease-in-out infinite;
+        }
+
+        .logo {
+            font-size: clamp(4rem, 8vw, 8rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, #4dd0e1, #80deea, #e0f7fa, #4dd0e1);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: textGlow 4s ease-in-out infinite alternate;
+        }
+
+        .subtitle {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 30px;
+            font-weight: 700;
+            animation: fadeIn 3s ease;
+        }
+
+        .tagline {
+            font-size: clamp(1.5rem, 3vw, 2.2rem);
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+        }
+
+        /* Services Screen */
+        .services-screen {
+            color: white;
+            text-align: center;
+        }
+
+        .services-title {
+            font-size: clamp(3rem, 6vw, 5.5rem);
+            font-weight: 900;
+            margin-bottom: 60px;
+            background: linear-gradient(135deg, #4dd0e1, #80deea, #ff6b6b);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: textGlow 4s ease infinite;
+        }
+
+        .service-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .service-item {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(77, 208, 225, 0.4);
+            border-radius: 20px;
+            padding: 30px;
+            animation: slideIn 1s ease forwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shine 3s infinite;
+        }
+
+        .service-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .service-name {
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            font-weight: 700;
+            color: #4dd0e1;
+        }
+
+        .service-price {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 900;
+            color: #80deea;
+            text-shadow: 0 0 20px rgba(128, 222, 234, 0.8);
+        }
+
+        .service-description {
+            font-size: clamp(1.2rem, 2vw, 1.8rem);
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Packages Screen */
+        .packages-screen {
+            color: white;
+            text-align: center;
+        }
+
+        .packages-title {
+            font-size: clamp(3rem, 6vw, 5.5rem);
+            font-weight: 900;
+            margin-bottom: 60px;
+            background: linear-gradient(135deg, #f59e0b, #fbbf24, #ff6b6b);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: textGlow 4s ease infinite;
+        }
+
+        .package-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 35px;
+            max-width: 850px;
+            width: 100%;
+        }
+
+        .package-item {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.3), rgba(251, 191, 36, 0.2));
+            backdrop-filter: blur(20px);
+            border: 3px solid rgba(245, 158, 11, 0.6);
+            border-radius: 25px;
+            padding: 40px;
+            position: relative;
+            animation: zoomIn 1s ease forwards;
+        }
+
+        .package-badge {
+            position: absolute;
+            top: -15px;
+            right: 30px;
+            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 20px;
+            font-size: clamp(1rem, 2vw, 1.4rem);
+            font-weight: 700;
+            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.4);
+        }
+
+        .package-name {
+            font-size: clamp(2rem, 3.5vw, 3rem);
+            font-weight: 800;
+            color: #fbbf24;
+            margin-bottom: 20px;
+        }
+
+        .package-price {
+            font-size: clamp(2.5rem, 4vw, 4rem);
+            font-weight: 900;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .package-old-price {
+            font-size: clamp(1.5rem, 2.5vw, 2.5rem);
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: line-through;
+            margin-bottom: 20px;
+        }
+
+        .package-features {
+            font-size: clamp(1.2rem, 2vw, 1.8rem);
+            color: rgba(255, 255, 255, 0.95);
+            line-height: 1.6;
+        }
+
+        /* Contact Screen */
+        .contact-screen {
+            color: white;
+            text-align: center;
+        }
+
+        .contact-title {
+            font-size: clamp(3rem, 6vw, 5.5rem);
+            font-weight: 900;
+            margin-bottom: 60px;
+            background: linear-gradient(135deg, #10b981, #34d399, #4dd0e1);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: textGlow 4s ease infinite;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .contact-item {
+            background: rgba(16, 185, 129, 0.15);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(16, 185, 129, 0.4);
+            border-radius: 20px;
+            padding: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            animation: slideUp 1s ease forwards;
+        }
+
+        .contact-icon {
+            font-size: clamp(2.5rem, 4vw, 3.5rem);
+            color: #34d399;
+        }
+
+        /* Floating Elements */
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .floating-shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 15s ease-in-out infinite;
+        }
+
+        .shape-1 {
+            width: 200px;
+            height: 200px;
+            top: 10%;
+            left: 10%;
+            background: linear-gradient(45deg, rgba(77, 208, 225, 0.2), rgba(255, 107, 107, 0.1));
+            animation-delay: 0s;
+        }
+
+        .shape-2 {
+            width: 150px;
+            height: 150px;
+            top: 60%;
+            right: 15%;
+            background: linear-gradient(45deg, rgba(251, 191, 36, 0.2), rgba(77, 208, 225, 0.1));
+            animation-delay: 5s;
+        }
+
+        .shape-3 {
+            width: 100px;
+            height: 100px;
+            top: 30%;
+            right: 10%;
+            background: linear-gradient(45deg, rgba(16, 185, 129, 0.2), rgba(255, 107, 107, 0.1));
+            animation-delay: 10s;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4dd0e1, #80deea, #ff6b6b, #fbbf24);
+            border-radius: 3px;
+            animation: progressFill 20s linear infinite;
+        }
+
+        /* Icons */
+        .icon-phone::before { content: '📞'; }
+        .icon-location::before { content: '📍'; }
+        .icon-clock::before { content: '🕒'; }
+
+        /* Animations - Optimized for Digital Signage */
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes screenCycle {
+            0% { opacity: 0; transform: translateY(50px); }
+            5% { opacity: 1; transform: translateY(0); }
+            20% { opacity: 1; transform: translateY(0); }
+            25% { opacity: 0; transform: translateY(-50px); }
+            100% { opacity: 0; transform: translateY(-50px); }
+        }
+
+        @keyframes textGlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes zoomIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(120deg); }
+            66% { transform: translateY(-10px) rotate(240deg); }
+        }
+
+        @keyframes progressFill {
+            0% { width: 0%; }
+            25% { width: 25%; }
+            50% { width: 50%; }
+            75% { width: 75%; }
+            100% { width: 100%; }
+        }
+
+        /* Responsive for different screen orientations */
+        @media (orientation: portrait) {
+            .service-grid, .package-grid, .contact-info {
+                max-width: 90%;
+            }
+            
+            .service-item, .package-item, .contact-item {
+                padding: 25px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .display-container {
+                padding: 20px;
+            }
+        }
+
+        /* Prevent text selection and context menu */
+        * {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+</head>
+<body>
+    <div class="display-container">
+        <!-- Floating Elements -->
+        <div class="floating-elements">
+            <div class="floating-shape shape-1"></div>
+            <div class="floating-shape shape-2"></div>
+            <div class="floating-shape shape-3"></div>
+        </div>
+
+        <!-- Welcome Screen -->
+        <div class="screen welcome-screen">
+            <div class="logo-container">
+                <div class="logo">MOON</div>
+                <div class="logo">BARBERSHOP</div>
+            </div>
+            <div class="subtitle">Profesjonell Barbering</div>
+            <div class="tagline">Kvalitet • Stil • Service</div>
+        </div>
+
+        <!-- Services Screen -->
+        <div class="screen services-screen">
+            <div class="services-title">Våre Tjenester</div>
+            <div class="service-grid">
+                <div class="service-item">
+                    <div class="service-header">
+                        <div class="service-name">Herreklipp</div>
+                        <div class="service-price">399,-</div>
+                    </div>
+                    <div class="service-description">Profesjonell klipp tilpasset din stil</div>
+                </div>
+                <div class="service-item">
+                    <div class="service-header">
+                        <div class="service-name">Skjeggtrim</div>
+                        <div class="service-price">299,-</div>
+                    </div>
+                    <div class="service-description">Presist trimming og forming</div>
+                </div>
+                <div class="service-item">
+                    <div class="service-header">
+                        <div class="service-name">Ungdom Klipp</div>
+                        <div class="service-price">349,-</div>
+                    </div>
+                    <div class="service-description">For unge menn under 18 år</div>
+                </div>
+                <div class="service-item">
+                    <div class="service-header">
+                        <div class="service-name">Barneklipp</div>
+                        <div class="service-price">299,-</div>
+                    </div>
+                    <div class="service-description">Profesjonell klipp for barn</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Packages Screen -->
+        <div class="screen packages-screen">
+            <div class="packages-title">Spesial Tilbud</div>
+            <div class="package-grid">
+                <div class="package-item">
+                    <div class="package-badge">Mest Populær</div>
+                    <div class="package-name">Herreklipp + Skjegg</div>
+                    <div class="package-price">649,-</div>
+                    <div class="package-old-price">698,-</div>
+                    <div class="package-features">Herreklipp + Skjeggtrim<br>Styling og finish<br>Spar 49 kroner</div>
+                </div>
+                <div class="package-item">
+                    <div class="package-badge">VIP</div>
+                    <div class="package-name">Premium Pakke</div>
+                    <div class="package-price">799,-</div>
+                    <div class="package-old-price">848,-</div>
+                    <div class="package-features">Premium ansiktsbehandling<br>Styling med kvalitetsprodukter<br>Spar 49 kroner</div>
+                </div>
+                <div class="package-item">
+                    <div class="package-name">VIP Behandling</div>
+                    <div class="package-price">999,-</div>
+                    <div class="package-old-price">1147,-</div>
+                    <div class="package-features">Klipp + Skjegg + Voks + Varmt håndkle<br>Ansiktsmaske + Kaffe/te<br>Spar 148 kroner</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Screen -->
+        <div class="screen contact-screen">
+            <div class="contact-title">Bestill Din Time</div>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <div class="contact-icon icon-phone"></div>
+                    <div>+47 463 360 65</div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon icon-location"></div>
+                    <div>Besøk oss nå</div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon icon-clock"></div>
+                    <div>Åpent daglig 10:00 - 19:00</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+    </div>
+
+    <script>
+        // Simplified script for digital signage compatibility
+        document.addEventListener('DOMContentLoaded', function() {
+            // Prevent right-click context menu
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+            });
+            
+            // Prevent key combinations
+            document.addEventListener('keydown', function(e) {
+                // Prevent F12, Ctrl+Shift+I, Ctrl+U, etc.
+                if (e.keyCode === 123 || 
+                    (e.ctrlKey && e.shiftKey && e.keyCode === 73) || 
+                    (e.ctrlKey && e.keyCode === 85)) {
+                    e.preventDefault();
+                }
+            });
+            
+            // Auto-refresh every 21 seconds as backup
+            setTimeout(function() {
+                location.reload();
+            }, 21000);
+            
+            console.log('MOON BARBERSHOP Digital Display - Optimized for AbleSign');
+        });
+    </script>
+</body>
+</html>
