@@ -25,7 +25,7 @@
             width: 100vw;
             height: 100vh;
             position: relative;
-            background: linear-gradient(45deg, #1a1a2e, #16213e, #0f3460, #5a9f9f, #4dd0e1);
+            background: linear-gradient(45deg, #000000, #1a0000, #000066, #330033, #000000);
             background-size: 500% 500%;
             animation: gradientShift 20s ease infinite;
         }
@@ -167,12 +167,14 @@
             font-size: clamp(2.5rem, 5vw, 4.5rem);
             font-weight: 900;
             margin-bottom: 60px;
-            background: linear-gradient(135deg, #f59e0b, #fbbf24, #ff6b6b);
+            background: linear-gradient(135deg, #ff6600, #ff9900, #ffcc00, #ff6600);
             background-size: 300% 300%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             animation: textGlow 4s ease infinite;
+            text-shadow: 0 0 60px rgba(255, 102, 0, 1);
+            filter: saturate(2) contrast(1.5);
         }
 
         .package-grid {
